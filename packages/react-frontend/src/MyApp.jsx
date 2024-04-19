@@ -12,9 +12,21 @@ function MyApp() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(person),
-    });
-
-    return promise;
+      code: 201,
+    })
+      .then((res) => {
+        if (res.status == 201) {
+          return res.json();
+        } else {
+          console.log("ERROR: Returned Status ", res.status);
+        }
+      })
+      .then((res) => {
+        setCharacters([...characters, res]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function fetchUsers() {
