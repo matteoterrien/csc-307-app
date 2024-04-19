@@ -21,12 +21,32 @@ function MyApp() {
           console.log("ERROR: Returned Status ", res.status);
         }
       })
+      .catch((error) => {
+        console.log(error);
+      });
+    return promise;
+  }
+
+  function deleteUser(index) {
+    const person = characters.at(index).id;
+    const promise = fetch("Http://localhost:8000/users/:" + person, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      code: 204,
+    })
       .then((res) => {
-        setCharacters([...characters, res]);
+        if (res.status == 404) {
+          console.log("Did not find user");
+        } else if (res.status != 204) {
+          console.log("ERROR: Returned Status ", res.status);
+        }
       })
       .catch((error) => {
         console.log(error);
       });
+    return promise;
   }
 
   function fetchUsers() {
@@ -36,17 +56,25 @@ function MyApp() {
 
   function updateList(person) {
     postUser(person)
-      .then(() => setCharacters([...characters, person]))
+      .then((promise) => {
+        setCharacters([...characters, promise]);
+      })
       .catch((error) => {
         console.log(error);
       });
   }
 
   function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i !== index;
-    });
-    setCharacters(updated);
+    deleteUser(index)
+      .then((promise) => {
+        const updated = characters.filter((character, i) => {
+          return i !== index;
+        });
+        setCharacters(updated);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   useEffect(() => {
