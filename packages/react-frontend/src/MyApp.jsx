@@ -28,7 +28,7 @@ function MyApp() {
   }
 
   function deleteUser(index) {
-    const person = characters.at(index).id;
+    const person = characters.at(index)._id;
     const promise = fetch("Http://localhost:8000/users/:" + person, {
       method: "DELETE",
       headers: {
