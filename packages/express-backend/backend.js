@@ -54,7 +54,7 @@ const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 
 const addUser = (user) => {
-  user.id = Math.floor(Math.random() * 1000 + 1000);
+  user.id = Math.floor(Math.random() * 1000 + 1000).toString();
   users["users_list"].push(user);
   return user;
 };
@@ -100,11 +100,13 @@ app.post("/users", (req, res) => {
 });
 
 app.delete("/users/:id", (req, res) => {
-  const id = req.params["id"];
+  const id = req.params["id"].slice(1);
   let result = findUserById(id);
   if (result === undefined) {
-    res.status(404).send("recource not found.");
+    res.status(404).send("resource not found.");
   } else {
-    res.send(result);
+    users.users_list = users.users_list.filter((user) => user.id !== id);
+    console.log(users.users_list);
+    res.status(204).send();
   }
 });
